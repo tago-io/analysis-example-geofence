@@ -7,9 +7,9 @@ const axios = require('axios');
 ** Analysis Example
 ** Post to HTTP Route
 **
-** This analysis simple post to an HTTP route. It's a starting example for you to develop more 
+** This analysis simple post to an HTTP route. It's a starting example for you to develop more
 ** complex algorithms.
-** In this example we get the Analysis name and print to the console.
+** In this example we get the Account name and print to the console.
 **
 **.
 * */
@@ -19,20 +19,25 @@ async function getToHTTP(context, scope) {
     url: 'https://api.tago.io/info',
     method: 'GET',
     headers: {
-      Authorization: context.token,
+      Authorization: 'Your-Account-Token',
     },
     // How to use HTTP QueryString
     // params: {
-    //  client_token,
+    //  serie: 123,
     // },
     //
     // How to send a HTTP Body:
     // body: 'My text body',
   };
-   
-  const result = await axios(options).catch(error => console.log(`${error.response.status}\n${error.response.statusText}`));
-  
-  if (result) context.log(result.data);
+
+  const result = await axios(options).catch((error) => { context.log(`${error}\n${error}`); return null; });
+  if (result) {
+    context.log(result.data);
+
+    context.log('Your account name is: ', result.data.resulta.name);
+  }
+
+
 }
 
-module.exports = new Analysis(getToHTTP, 'ANALYSIS TOKEN HERE');
+module.exports = new Analysis(getToHTTP, '');
