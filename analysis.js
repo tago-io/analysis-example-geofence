@@ -1,48 +1,38 @@
 const TagoUtils = require('tago/utils');
 const TagoAccount = require('tago/account');
 const Analysis = require('tago/analysis');
+const axios = require('axios');
 
 /*
 ** Analysis Example
-** Get Device List
+** Post to HTTP Route
 **
-** This analysis retrieves the device list of your account and print to the console.
-** There are examples on how to apply filter.
+** This analysis simple post to an HTTP route. It's a starting example for you to develop more 
+** complex algorithms.
+** In this example we get the Analysis name and print to the console.
 **
-** Environment Variables
-** In order to use this analysis, you must setup the Environment Variable table.
-**
-** account_token: Your account token
-**
-** Steps to generate an account_token:
-** 1 - Enter the following link: https://admin.tago.io/account/
-** 2 - Select your Profile.
-** 3 - Enter Tokens tab.
-** 4 - Generate a new Token with Expires Never.
-** 5 - Press the Copy Button and place at the Environment Variables tab of this analysis.
+**.
 * */
 
-async function listDevicesByTag(context) {
-  // Transform all Environment Variable to JSON.
-  const envVars = TagoUtils.env_to_obj(context.environment);
-  
-  if (!envVars.account_token) return context.log('Missing account_token environment variable');
-  const account = new TagoAccount(envVars.account_token);
+async function getToHTTP(context, scope) {
+  const options = {
+    url: 'https://api.tago.io/info',
+    method: 'GET',
+    headers: {
+      Authorization: context.token,
+    },
+    // How to use HTTP QueryString
+    // params: {
+    //  client_token,
+    // },
+    //
+    // How to send a HTTP Body:
+    // body: 'My text body',
+  };
    
-  // Example of filtering devies by Tag.
-  // You can filter by: name, last_input, last_output, bucket, etc.
-  const filter = {
-    tags: [{
-      key: 'keyOfTagWeWantToSearch', value: 'valueOfTagWeWantToSearch',
-    }],
-    // bucket: '55d269211a2e236c25bb9859',
-    // name: 'My Device'
-    // name: 'My Dev*
-  }
-  // Searching all devices with tag we want
-  const devices = await account.devices.list(1, ['id', 'tags'], filter, 10000);
-
-  context.log(devices);
+  const result = await axios(options).catch(error => console.log(`${error.response.status}\n${error.response.statusText}`));
+  
+  if (result) context.log(result.data);
 }
 
-module.exports = new Analysis(listDevicesByTag, 'ANALYSIS TOKEN HERE');
+module.exports = new Analysis(getToHTTP, 'ANALYSIS TOKEN HERE');
