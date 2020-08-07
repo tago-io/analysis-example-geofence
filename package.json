@@ -1,10 +1,10 @@
 {
-  "name": "analysis-example-httpget",
+  "name": "analysis-example-geofence",
   "version": "1.0.1",
   "private": true,
-  "description": "Post to HTTP Route",
+  "description": "Check if location point is inside geofence",
   "main": "analysis.js",
-  "repository": "tago-io/analysis-example-httpget",
+  "repository": "tago-io/analysis-example-geofence",
   "author": "Tago LLC",
   "license": "MIT",
   "dependencies": {
