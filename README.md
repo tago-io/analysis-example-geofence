@@ -1,10 +1,9 @@
 ## What this does
 Analysis Example
-Post to HTTP Route
+Check if point is inside a geofence
 
-This analysis simple post to an HTTP route. It's a starting example for you to develop more
-complex algorithms.
-In this example we get the Account name and print to the console.
+This analysis use geofences to control the area that your devices are in.
+Based on the geofence your device is in, sends out an notification alert.
 
 `npm install`<br>
 `node analysis.js`
