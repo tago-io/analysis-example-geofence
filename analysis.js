@@ -116,4 +116,4 @@ async function startAnalysis(context, scope) {
   context.log(zone.event);
 }
 
-module.exports = new Analysis(startAnalysis, { token: "" });
+module.exports = new Analysis(startAnalysis);
