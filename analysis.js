@@ -79,7 +79,6 @@ async function startAnalysis(context, scope) {
   // The code block below gets all environment variables and checks if we have the needed ones.
   const environment = Utils.envToJson(context.environment);
   if (!environment.account_token) throw "Missing account_token environment var";
-  else if (!environment.device_token) throw "Missing device_token environment var";
 
   const account = new Account({ token: environment.account_token });
   const device_id = scope[0].origin;
