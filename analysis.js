@@ -7,8 +7,11 @@
  * Instructions
  * To run this analysis you need to add an account token to the environment variables,
  * To do that, go to your account settings, then token and copy your token.
- * Go the the analysis, then environment variables,
- * type account_token on key, and paste your token on value
+ * 1 - Enter the following link: https://admin.tago.io/account/
+ * 2 - Select your Profile.
+ * 3 - Enter Tokens tab.
+ * 4 - Generate a new Token with Expires Never.
+ * 5 - Press the Copy Button and place at the Environment Variables tab of this analysis with key account_token.
  *
  * Follow this guide https://docs.tago.io/en/articles/151 and create
  * two geofences, one with the event code 'danger' and another named 'safe'.
@@ -74,9 +77,9 @@ async function startAnalysis(context, scope) {
   if (!scope[0]) throw "Scope is missing"; // doesn't need to run if scope[0] is null
 
   // The code block below gets all environment variables and checks if we have the needed ones.
-  const environment = Utils.envToJson(context.environment);
   if (!environment.account_token) throw "Missing account_token environment var";
   else if (!environment.device_token) throw "Missing device_token environment var";
+  const environment = Utils.envToJson(context.environment);
 
   const account = new Account({ token: environment.account_token });
   const device_id = scope[0].origin;
