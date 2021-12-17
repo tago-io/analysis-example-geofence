@@ -16,10 +16,8 @@
  * Follow this guide https://docs.tago.io/en/articles/151 and create
  * two geofences, one with the event code 'danger' and another named 'safe'.
  */
-
 const { Utils, Account, Analysis, Device, Services } = require("@tago-io/sdk");
 const geolib = require("geolib");
-
 // This function checks if our device is inside a polygon geofence
 function insidePolygon(point, geofence) {
   const x = point[1];
@@ -36,7 +34,6 @@ function insidePolygon(point, geofence) {
   }
   return inside;
 }
-
 // This function checks if our device is inside any geofence
 function checkZones(point, geofence_list) {
   // The line below gets all Polygon geofences that we may have.
@@ -70,7 +67,6 @@ function checkZones(point, geofence_list) {
   }
   return;
 }
-
 // This function help us get the device using just its id.
 async function getDevice(account, device_id) {
   const customer_token = await Utils.getTokenByName(account, device_id);
@@ -82,26 +78,25 @@ async function startAnalysis(context, scope) {
   context.log("Running");
 
   if (!scope[0]) throw "Scope is missing"; // doesn't need to run if scope[0] is null
+  if (!scope[0]) return context.log("Scope is missing"); // doesn't need to run if scope[0] is null
 
   // The code block below gets all environment variables and checks if we have the needed ones.
   const environment = Utils.envToJson(context.environment);
   if (!environment.account_token) throw "Missing account_token environment var";
+  if (!environment.account_token)
+    return context.log("Missing account_token environment var");
 
   const account = new Account({ token: environment.account_token });
   const device_id = scope[0].origin;
-
   // Here we get the device information using our account data and the device id.
   const device = await getDevice(account, device_id);
-
   // This checks if we received a location
   const location = scope.find((data) => data.variable === "location");
   if (!location || !location.location)
     return context.log("No location found in the scope.");
-
   // Now we check if we have any geofences to go through.
   const geofences = await device.getData({ variable: "geofence", qty: 10 });
   const zones = geofences.map((geofence) => geofence.metadata);
-
   const zone = checkZones(location.location.coordinates, zones);
 
   // The line below starts our notification service.
@@ -131,8 +126,6 @@ async function startAnalysis(context, scope) {
       message: "Your device is inside a safe zone.",
     });
   }
-
   context.log(zone.event);
 }
-
 module.exports = new Analysis(startAnalysis);
