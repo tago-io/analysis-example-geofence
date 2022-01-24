@@ -77,14 +77,15 @@ async function getDevice(account, device_id) {
 async function startAnalysis(context, scope) {
   context.log("Running");
 
-  if (!scope[0]) throw "Scope is missing"; // doesn't need to run if scope[0] is null
-  if (!scope[0]) return context.log("Scope is missing"); // doesn't need to run if scope[0] is null
+  if (!scope[0]) {
+    throw "Scope is missing"; // doesn't need to run if scope[0] is null
+  }
 
   // The code block below gets all environment variables and checks if we have the needed ones.
   const environment = Utils.envToJson(context.environment);
-  if (!environment.account_token) throw "Missing account_token environment var";
-  if (!environment.account_token)
-    return context.log("Missing account_token environment var");
+  if (!environment.account_token) {
+    throw "Missing account_token environment var";
+  }
 
   const account = new Account({ token: environment.account_token });
   const device_id = scope[0].origin;
