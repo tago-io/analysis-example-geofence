@@ -88,7 +88,7 @@ async function startAnalysis(context, scope) {
   }
 
   const account = new Account({ token: environment.account_token });
-  const device_id = scope[0].origin;
+  const device_id = scope[0].device;
   // Here we get the device information using our account data and the device id.
   const device = await getDevice(account, device_id);
   // This checks if we received a location
