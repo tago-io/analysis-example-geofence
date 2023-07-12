@@ -4,19 +4,17 @@
  *
  * Use geofences to control the area that your devices are in.
  *
- * Instructions
- * To run this analysis you need to add an account token to the environment variables,
- * To do that, go to your account settings, then token and copy your token.
- * 1 - Enter the following link: https://admin.tago.io/account/
- * 2 - Select your Profile.
- * 3 - Enter Tokens tab.
- * 4 - Generate a new Token with Expires Never.
- * 5 - Press the Copy Button and place at the Environment Variables tab of this analysis with key account_token.
- *
+ ** How to use:
+ ** To analysis works, you need to add a new policy in your account. Steps to add a new policy:
+ **  1 - Click the button "Add Policy" at this url: https://admin.tago.io/am;
+ **  2 - In the Target selector, select the Analysis with the field set as "ID" and choose your Analysis in the list;
+ **  3 - Click the "Click to add a new permission" element and select "Device" with the rule "Access" with the field as "Any";
+ **  4 - To save your new Policy, click the save button in the bottom right corner;
+ **
  * Follow this guide https://docs.tago.io/en/articles/151 and create
  * two geofences, one with the event code 'danger' and another named 'safe'.
  */
-const { Utils, Account, Analysis, Device, Services } = require("@tago-io/sdk");
+const { Utils, Account, Analysis, Device, Services, Resources } = require("@tago-io/sdk");
 const geolib = require("geolib");
 // This function checks if our device is inside a polygon geofence
 function insidePolygon(point, geofence) {
@@ -67,12 +65,6 @@ function checkZones(point, geofence_list) {
   }
   return;
 }
-// This function help us get the device using just its id.
-async function getDevice(account, device_id) {
-  const customer_token = await Utils.getTokenByName(account, device_id);
-  const customer_dev = new Device({ token: customer_token });
-  return customer_dev;
-}
 
 async function startAnalysis(context, scope) {
   context.log("Running");
@@ -86,17 +78,13 @@ async function startAnalysis(context, scope) {
   if (!environment.account_token) {
     throw "Missing account_token environment var";
   }
-
-  const account = new Account({ token: environment.account_token });
   const device_id = scope[0].device;
-  // Here we get the device information using our account data and the device id.
-  const device = await getDevice(account, device_id);
   // This checks if we received a location
   const location = scope.find((data) => data.variable === "location");
   if (!location || !location.location)
     return context.log("No location found in the scope.");
   // Now we check if we have any geofences to go through.
-  const geofences = await device.getData({ variable: "geofence", qty: 10 });
+  const geofences = await Resources.devices.getDeviceData(device_id, { variable: "geofence", qty: 10 });
   const zones = geofences.map((geofence) => geofence.metadata);
   const zone = checkZones(location.location.coordinates, zones);
 
