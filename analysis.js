@@ -14,7 +14,7 @@
  * Follow this guide https://docs.tago.io/en/articles/151 and create
  * two geofences, one with the event code 'danger' and another named 'safe'.
  */
-const { Utils, Account, Analysis, Device, Services, Resources } = require("@tago-io/sdk");
+const { Analysis, Services, Resources } = require("@tago-io/sdk");
 const geolib = require("geolib");
 // This function checks if our device is inside a polygon geofence
 function insidePolygon(point, geofence) {
@@ -72,19 +72,16 @@ async function startAnalysis(context, scope) {
   if (!scope[0]) {
     throw "Scope is missing"; // doesn't need to run if scope[0] is null
   }
-
-  // The code block below gets all environment variables and checks if we have the needed ones.
-  const environment = Utils.envToJson(context.environment);
-  if (!environment.account_token) {
-    throw "Missing account_token environment var";
-  }
   const device_id = scope[0].device;
   // This checks if we received a location
   const location = scope.find((data) => data.variable === "location");
   if (!location || !location.location)
     return context.log("No location found in the scope.");
   // Now we check if we have any geofences to go through.
-  const geofences = await Resources.devices.getDeviceData(device_id, { variable: "geofence", qty: 10 });
+  const geofences = await Resources.devices.getDeviceData(device_id, {
+    variable: "geofence",
+    qty: 10,
+  });
   const zones = geofences.map((geofence) => geofence.metadata);
   const zone = checkZones(location.location.coordinates, zones);
 

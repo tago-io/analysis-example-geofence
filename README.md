@@ -8,7 +8,7 @@ Based on the geofence your device is in, sends out an notification alert.
 `npm install`<br>
 `node analysis.js`
 
-## How to use on TagoIO
+## How to use at TagoIO (Internal Mode)
 
 In order to use this analysis, you must to add a new policy in your account.<br>
 
