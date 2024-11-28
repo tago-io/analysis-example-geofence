@@ -129,4 +129,8 @@ async function startAnalysis(context, scope) {
   }
   context.log(zone.event);
 }
-module.exports = new Analysis(startAnalysis);
+
+Analysis.use(startAnalysis);
+
+// To run analysis on your machine (external)
+// Analysis.use(myAnalysis, { token: "YOUR-TOKEN" });
